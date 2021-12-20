@@ -1,0 +1,16 @@
+.background_section{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.content_section{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.button_section{
+    display: flex;
+    flex-direction: column;
+}

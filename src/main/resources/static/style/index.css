@@ -22,7 +22,7 @@
 
 
 
-table, th, td {
+th, td {
     border: 1px solid black;
     padding: 1px;
 }
@@ -42,4 +42,12 @@ table, th, td {
     background-color: gray;
     justify-content: center;
     padding: 10px;
+}
+
+#candidateListHint {
+    display: none;
+}
+
+#candidateList {
+    display: none;
 }

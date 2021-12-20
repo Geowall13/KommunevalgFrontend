@@ -11,11 +11,13 @@ function setUpHandlers(){
     document.getElementById("candidateList").onclick = sortCandidateList
     document.getElementById("submitBtn").onclick = confirmCandidateCreationUpdate
     document.getElementById("cancelBtn").onclick = cancelCandidateCreationUpdate
+    document.getElementById("createNewCandidate").onclick = createUpdateCandidate
+    document.getElementById("resultBtn").onclick = showResult
 }
 
 function setUpListHandlers(){
     for(let i = 0; i < candidates.length; i++){
-        document.getElementById("update_" + i).onclick = updateCandidate
+        document.getElementById("update_" + i).onclick = createUpdateCandidate
         document.getElementById("delete_" + i).onclick = deleteCandidate
     }
 }
@@ -29,6 +31,9 @@ async function getAllCandidates(){
 function updateCandidateList(){
     const candidateList = document.getElementById("candidateList")
 
+    document.getElementById("candidateListHint").style.display = "initial"
+    document.getElementById("candidateList").style.display = "initial"
+
     let candidateListHtml = getCandidateListHeaderHtml()
     for(let i = 0; i < candidates.length; i++){
         candidateListHtml += getCandidateTableItemHtml(candidates[i], i)
@@ -36,6 +41,8 @@ function updateCandidateList(){
     candidateList.innerHTML = candidateListHtml
 
     setUpListHandlers()
+
+
 }
 
 function getCandidateListHeaderHtml(){
@@ -109,9 +116,9 @@ function generatePartyListHtml(){
     partyList.innerHTML = partyListHtml
 }
 
-async function updateCandidate(ev){
+async function createUpdateCandidate(ev){
     const row = ev.target.dataset.row
-
+    ev.target.dataset.row = "-1"
     candidateCreator = makeCandidateCreator()
 
     if(row !== "-1") {
@@ -179,14 +186,32 @@ async function chooseParty(partyId){
 }
 
 async function postCandidate(){
+    const firstName = candidateCreator.getFirstName()
+    const middleName = candidateCreator.getMiddleName()
+    const surName = candidateCreator.getSurName()
+    const partyId = candidateCreator.getPartyId()
 
+    const options = {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            firstName: firstName,
+            middleName: middleName,
+            surName: surName,
+            partyId: partyId,
+
+        })
+    }
+    await fetch("http://localhost:8081/candidate", options)
 }
 
 async function putCandidate(){
     const firstName = candidateCreator.getFirstName()
     const middleName = candidateCreator.getMiddleName()
     const surName = candidateCreator.getSurName()
-    const votes = candidateCreator.getVotes()
     const partyId = candidateCreator.getPartyId()
     const candidateId = candidateCreator.getCandidateId()
 
@@ -200,14 +225,11 @@ async function putCandidate(){
             firstName: firstName,
             middleName: middleName,
             surName: surName,
-            votes: votes,
             partyId: partyId,
             id: candidateId
         })
     }
     await fetch("http://localhost:8081/candidate", options)
-
-
 }
 
 
@@ -216,7 +238,6 @@ function makeCandidateCreator(){
     let middleName
     let surName
     let partyId
-    let votes
     let candidateId
 
     return {
@@ -252,13 +273,6 @@ function makeCandidateCreator(){
             return partyId
         },
 
-        setVotes: (data) => {
-            votes = data
-        },
-
-        getVotes: () => {
-            return votes
-        },
 
         setCandidateId: (data) => {
             candidateId = data
@@ -268,4 +282,51 @@ function makeCandidateCreator(){
             return candidateId
         }
     }
+}
+
+async function showResult(){
+    hideCandidateList()
+
+    const response = await fetch("http://localhost:8081/parties")
+    const parties = await response.json()
+
+    let resultHtml = setupResultHtmlHead()
+    resultHtml += setUpResultHtml(parties)
+    document.getElementById("resultTable").innerHTML = resultHtml
+}
+
+function setUpResultHtml(parties){
+    let totalVotes = 0
+
+    for(const party of parties){
+        totalVotes += party.votes
+    }
+
+    let resultHtml = ""
+
+    for(const party of parties){
+        let percentOfVotes = ((party.votes/totalVotes)*100).toFixed(2)
+
+        resultHtml +=
+            `<tr>
+                <td>${party.partyName}</td>
+                <td>${party.votes}</td>
+                <td>${percentOfVotes} %</td>
+            </tr>`
+    }
+
+    return resultHtml
+}
+
+function setupResultHtmlHead(){
+    return  `<tr>
+                <th>Partinavn</th>
+                <th>Antal stemmer</th>
+                <th>Stemmeprocent</th>
+            </tr>`
+}
+
+function hideCandidateList(){
+    document.getElementById("candidateList").style.display = "none"
+
 }

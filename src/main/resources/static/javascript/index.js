@@ -171,8 +171,6 @@ function cancelCandidateCreationUpdate(){
 async function chooseParty(partyId){
     candidateCreator.setPartyId(partyId)
 
-    console.log(candidateCreator.getCandidateId())
-
     if(candidateCreator.getCandidateId() == null){
         await postCandidate()
     }

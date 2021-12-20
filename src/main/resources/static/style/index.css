@@ -4,13 +4,42 @@
     align-items: center;
 }
 
-.content_section{
+.body_section{
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
 
+.content_section{
+    margin: 10px;
+}
+
 .button_section{
     display: flex;
     flex-direction: column;
+    margin: 10px;
+}
+
+
+
+table, th, td {
+    border: 1px solid black;
+    padding: 1px;
+}
+
+.hiddenBox {
+    display: none;
+    position: absolute;
+    float: left;
+    z-index: 2;
+    margin-top: 50px;
+    margin-left: 50px;
+    margin-right: 50px;
+    left: 50%;
+    top: 50px;
+    transform: translate(-50%);
+    overflow: auto;
+    background-color: gray;
+    justify-content: center;
+    padding: 10px;
 }

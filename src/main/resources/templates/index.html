@@ -9,12 +9,37 @@
 </head>
 <body>
 
+    <div id="candidateForm" class="hiddenBox" data-row="-1">
+        <form>
+            <label for="firstNameInput">Fornavn:</label><br>
+            <input type="text" id="firstNameInput" name="firstNameInput"><br>
+            <label for="middleNameInput">Mellemnavn:</label><br>
+            <input type="text" id="middleNameInput" name="middleNameInput"><br>
+            <label for="surNameInput">Efternavn:</label><br>
+            <input type="text" id="surNameInput" name="surName"><br>
+            <input type="submit" id="submitBtn" value="Ok">
+            <input type="button" id="cancelBtn" value="Annuller">
+        </form>
+    </div>
+
+    <div class="hiddenBox" id="partyBox">
+        <h1>Vælg parti til kandidaten</h1>
+        <div id="partyList">
+
+        </div>
+    </div>
+
     <section class="background_section">
         <h1>Samsø kommunevalg 2021!</h1>
 
-        <section class="content_section">
+        <section class="body_section">
 
-            <div id="contentDiv"></div>
+            <section id="contentSection" class="content_section">
+                <table id="candidateList">
+
+                </table>
+
+            </section>
 
             <section class="button_section">
                 <button id="showAllCandidatesBtn">Se alle kandidater</button>
